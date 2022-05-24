@@ -65,6 +65,8 @@
   * 0 ～ 99 % 
   * 100%は表示桁数制限のため99%と表示
   * OpenWeatherMapでは表示されません
+* バックライト
+  * 約3分で自動消灯、ケース表面のタッチパネルに触れると再点灯します
 ## 筐体
 * Thingiverseで公開済み
 * https://www.thingiverse.com/thing:5393771
