@@ -11,8 +11,8 @@
 #define SW_PIN 15
 
 // weather infomation site setting
-//#define USE_TENKI_JP
-#define USE_WEATHERNEWS
+#define USE_TENKI_JP
+//#define USE_WEATHERNEWS
 
 #define USE_TOUCHPANEL_SW
 #if defined(USE_TOUCHPANEL_SW)
