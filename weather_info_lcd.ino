@@ -527,7 +527,7 @@ bool update_weather_1h_weathernews() {
                 break;
             } else if (table_found) {
                 //Serial.println(line);
-                if (line.indexOf("</div>", 0) >= 0 && table_index_weather >= weather_info_count) {
+                if (line.indexOf("</section>", 0) >= 0 && table_index_weather >= weather_info_count) {
                     //Serial.println("end of table!!");
                     table_found = false;
                     if (found_item_count == weather_info_count*weather_item_count) {
@@ -649,7 +649,7 @@ bool update_weather_1h_weathernews() {
                 } else if (line.indexOf("</tr>") >=0) {
                     curr_block_name = "";
                 }
-            } else if (line.indexOf("<div class=\"wTable__group\">", 0) >= 0) {
+            } else if (line.indexOf("id=\"flick_list_1hour\"", 0) >= 0) {
                 table_found = true;
                 Serial.println("table found!");
             }
