@@ -11,8 +11,11 @@
 #define SW_PIN 15
 
 // weather infomation site setting
-#define USE_TENKI_JP
-//#define USE_WEATHERNEWS
+//#define USE_TENKI_JP
+#define USE_WEATHERNEWS
+
+// for debug
+//#define DEBUG_WITHOUT_PERIPHERAL_DEVICE
 
 #define USE_TOUCHPANEL_SW
 #if defined(USE_TOUCHPANEL_SW)
@@ -627,7 +630,7 @@ bool update_weather_1h_weathernews() {
                 // wind-speed
                 } else if (line.indexOf("<p class=\"wTable__item w\">") >= 0) {
                     curr_block_name = "wind-speed";
-                } else if (curr_block_name == "wind-speed" && table_index_wind_speed<weather_info_count && line.indexOf("png\"></i>") >=0) {
+                } else if (curr_block_name == "wind-speed" && table_index_wind_speed<weather_info_count && line.indexOf("</i>") >=0) {
                     found_item_count++;
                     int tag_len = String("</i>").length();
                     int tag_idx = line.indexOf("</i>");
@@ -949,6 +952,13 @@ void display_weather_info_1h(int disp_mode) {
     lcd.print(ConvStr(line3));
     lcd.setCursor(0, 3);
     lcd.print(ConvStr(line4));
+
+#if defined(DEBUG_WITHOUT_PERIPHERAL_DEVICE)
+    Serial.println(line1);
+    Serial.println(line2);
+    Serial.println(line3);
+    Serial.println(line4);
+#endif
 }
 
 void loop()
@@ -1014,6 +1024,9 @@ void loop()
             timer_display_mode = 0;
         }
     }
+#if defined(DEBUG_WITHOUT_PERIPHERAL_DEVICE)
+    timer_display_mode = 0;
+#endif
     //backlight auto off
     if (timer_backlight_off > 0) {
         timer_backlight_off--;
