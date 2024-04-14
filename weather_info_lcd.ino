@@ -541,7 +541,7 @@ bool update_weather_1h_weathernews() {
                     }
 
                 // weather
-                } else if (line.indexOf("<p class=\"wTable__item weather\">") >= 0) {
+                } else if (line.indexOf("<li class=\"weather\">") >= 0) {
                     curr_block_name = "weather";
                 } else if (curr_block_name=="weather" && table_index_weather<weather_info_count && line.indexOf("wxicon/")>=0) {
                     found_item_count++;
@@ -604,50 +604,62 @@ bool update_weather_1h_weathernews() {
                             weather_info_list[table_index_weather].icon = 99;
                     }
                     table_index_weather++;
+                    curr_block_name = "";
 
                 // hour
-                } else if (line.indexOf("<p class=\"wTable__item time\">") >= 0 && table_index_hour<weather_info_count) {
+                } else if (line.indexOf("<li class=\"time\">") >= 0){
+                    curr_block_name = "hour";
+                } else if (curr_block_name=="hour" && table_index_hour<weather_info_count) {
                     found_item_count++;
-                    int tag_len = String("time\">").length();
-                    int tag_idx = line.indexOf("time\">");
+                    int tag_len = String("<p>").length();
+                    int tag_idx = line.indexOf("<p>");
                     int tag_idx2 = line.lastIndexOf("</p>");
                     String hour_str = line.substring(tag_idx+tag_len, tag_idx2);
                     weather_info_list[table_index_hour].hour = hour_str.toInt();
                     table_index_hour++;
+                    curr_block_name = "";
 
                 // temperature
-                } else if (line.indexOf("<p class=\"wTable__item t\">") >= 0 && table_index_temperature < weather_info_count) {
+                } else if (line.indexOf("<li class=\"temp\">") >= 0){
+                    curr_block_name = "temp";
+                } else if (curr_block_name=="temp" && table_index_temperature < weather_info_count) {
                     found_item_count++;
-                    int tag_len = String("t\">").length();
-                    int tag_idx = line.indexOf("t\">");
+                    int tag_len = String("<p>").length();
+                    int tag_idx = line.indexOf("<p>");
                     int tag_idx2 = line.lastIndexOf("<span");
                     String temp_str = line.substring(tag_idx+tag_len, tag_idx2);
                     double temp_f = temp_str.toDouble();
                     int temp = temp_f < 0 ? int(temp_f-0.5) : int(temp_f+0.5);
                     weather_info_list[table_index_temperature].temperature = temp;
                     table_index_temperature++;
+                    curr_block_name = "";
 
                 // wind-speed
-                } else if (line.indexOf("<p class=\"wTable__item w\">") >= 0) {
+                } else if (line.indexOf("<li class=\"wind\">") >= 0) {
                     curr_block_name = "wind-speed";
-                } else if (curr_block_name == "wind-speed" && table_index_wind_speed<weather_info_count && line.indexOf("</i>") >=0) {
+                } else if (curr_block_name == "wind-speed" && table_index_wind_speed<weather_info_count && line.indexOf("</span></p>") >=0) {
                     found_item_count++;
-                    int tag_len = String("</i>").length();
-                    int tag_idx = line.indexOf("</i>");
+                    int tag_len = String("<p>").length();
+                    int tag_idx = line.indexOf("<p>");
                     int tag_idx2 = line.lastIndexOf("<span");
                     String wind_str = line.substring(tag_idx+tag_len, tag_idx2);
                     weather_info_list[table_index_wind_speed].wind_speed = wind_str.toInt();
                     table_index_wind_speed++;
+                    curr_block_name = "";
 
                 // rain precipitation
-                } else if (line.indexOf("<p class=\"wTable__item r\">") >= 0 && table_index_precipitation<weather_info_count) {
+                } else if (line.indexOf("<li class=\"rain\">") >= 0) {
+                    curr_block_name = "rain-precipitation";
+                } else if (curr_block_name=="rain-precipitation" && table_index_precipitation<weather_info_count) {
                     found_item_count++;
-                    int tag_len = String(" r\">").length();
-                    int tag_idx = line.indexOf(" r\">");
-                    int tag_idx2 = line.lastIndexOf("<span");
-                    String rain_str = line.substring(tag_idx+tag_len, tag_idx2);
+                    int tag_len = String("<p>").length();
+                    int tag_idx = line.indexOf("<p>");
+                    //int tag_idx2 = line.lastIndexOf("<span");
+                    //String rain_str = line.substring(tag_idx+tag_len, tag_idx2);
+                    String rain_str = line.substring(tag_idx+tag_len);
                     weather_info_list[table_index_precipitation].rain_1h_mm = rain_str.toDouble();
                     table_index_precipitation++;
+                    curr_block_name="";
 
                 } else if (line.indexOf("</tr>") >=0) {
                     curr_block_name = "";
@@ -1015,9 +1027,9 @@ void loop()
         esp_restart();
     }
 
-    //wait 100ms*10=1sec
-    for (int i=0; i<10; i++) {
-        delay(100);
+    //wait 50ms*20=1sec
+    for (int i=0; i<20; i++) {
+        delay(50);
         if (digitalRead(SW_PIN)==SW_ON) {
             timer_backlight_off = interval_backlight_off;
             lcd.backlight();
