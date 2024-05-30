@@ -916,7 +916,7 @@ void display_weather_info_1h(int disp_mode) {
                 } else if (1.0 <= rain_1h_mm && rain_1h_mm < 4.0) {
                     rain_level[i] = 3;
                 } else if (4.0 <= rain_1h_mm && rain_1h_mm < 7.5) {
-                    rain_level[i] = 3;
+                    rain_level[i] = 4;
                 } else /*7.5<=rain_1h_mm*/ {
                     rain_level[i] = 5;
                 }
