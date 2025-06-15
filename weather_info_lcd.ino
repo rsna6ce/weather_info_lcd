@@ -322,6 +322,7 @@ bool update_weather_3h_tenki_jp() {
     // Make a HTTP request:
     client.println("GET " + tenki_jp_url + " HTTP/1.0");
     client.println("Host: " + String(tenki_jp_host));
+    client.println("User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36");
     client.println("Connection: close");
     client.println();
 
